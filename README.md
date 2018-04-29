@@ -17,5 +17,6 @@ int main(int argc,char *argv[]){
 	for(auto i:Range<signed char>('c','a',-1))
 		std::cout<<i<<' ';
 	std::cout<<std::endl;
+	return 0;
 }
 ```
