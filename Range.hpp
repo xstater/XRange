@@ -39,7 +39,7 @@ class Range{
 				}
 				
 				bool operator!=(const iterator &itr)const noexcept{
-					if(itr.m_step != 0)//not end iterator
+					if(itr.m_step != 0)
 						return m_now != itr.m_now;
 					if(m_step > 0)
 						return m_now <= *itr;
