@@ -1,13 +1,16 @@
 #ifndef _XRANGE_
 #define _XRANGE_
 
+#include <exception>
+#include <stdexcept>
+
 template<class Type>
 class Range{
 	public:
 		class iterator{
 			public:
-				iterator(Type begin,Type step)
-					:m_now(begin),m_step(step){}
+				iterator(Type now,Type step)
+					:m_now(now),m_step(step){}
 				iterator(const iterator&) = default;
 				//iterator(iterator&&) = default
 				~iterator() = default;
@@ -36,7 +39,12 @@ class Range{
 				}
 				
 				bool operator!=(const iterator &itr)const noexcept{
-					return m_now != itr.m_now;
+					if(itr.m_step != 0)//not end iterator
+						return m_now != itr.m_now;
+					if(m_step > 0)
+						return m_now <= *itr;
+					else
+						return m_now >= *itr;
 				}
 				bool operator==(const iterator &itr)const noexcept{
 					return m_now == itr.m_now;
@@ -50,21 +58,20 @@ class Range{
 			:m_val_start(val_start),
 			 m_val_end(val_end),
 			 m_val_step(val_step){
-			//some exceptions here
+			if(val_step > 0 && val_start > val_end)
+				throw std::logic_error("Range:Step error");
+			if(val_step < 0 && val_start < val_end)
+				throw std::logic_error("Range:Step error");
 		}
-		Range(Type val_end)
-			:m_val_start(0),
-			 m_val_end(val_end),
-			 m_val_step(val_end>0?1:-1){}
 		Range(const Range &) = default;
-		//Range(Range&&) = default;
+		Range(Range&&) = default;
 		~Range() = default;
 		
 		iterator begin()noexcept{
 			return iterator(m_val_start,m_val_step);
 		}
 		iterator end()noexcept{
-			return iterator(m_val_end + m_val_step,m_val_step);
+			return iterator(m_val_end,0);
 		}
 	protected:
 	private:
