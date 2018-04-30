@@ -12,7 +12,7 @@ class Range{
 				iterator(Type now,Type step)
 					:m_now(now),m_step(step){}
 				iterator(const iterator&) = default;
-				//iterator(iterator&&) = default
+				iterator(iterator&&) = default;
 				~iterator() = default;
 				
 				Type operator*()const noexcept{
