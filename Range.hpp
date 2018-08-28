@@ -12,14 +12,6 @@
                 :NumberRange(val_start,val_end,val_step){} \
             ~Range() = default; \
     }; \
-
-    
-//todo:添加Range的新功能
-//不只能产生数值区间还能产生序列区间
-//例子：
-//for(auto &i:Range<std::vector<int>>(v.begin()+1,v.end())){std::cout<<i<<std::endl;}
-    
-//数值类型和序列类型取值为[a,b]
     
 template<class Type>
 class NumberRange{
@@ -208,16 +200,6 @@ class Range:public SequenceIteratorRange<Type>{
             :SequenceIteratorRange<Type>(_begin,_end,_step){}
         ~Range() = default;
 };
-
-/*
-template<>
-class Range<int>:public NumberRange<int>{
-    public:
-        Range(int val_start,int val_end,int val_step = 1)
-            :NumberRange(val_start,val_end,val_step){}
-        ~Range() = default;
-};
-*/
 
 XRANGE_NUM_EXPAND(char)
 XRANGE_NUM_EXPAND(signed char)
