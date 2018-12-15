@@ -1,225 +1,176 @@
-#ifndef _XRANGE_
-#define _XRANGE_
+#ifndef _X_RANGE_H_
+#define _X_RANGE_H_
 
-#include <exception>
-#include <stdexcept>
+#include <iterator>
 
-#define XRANGE_NUM_EXPAND(Type) \
-    template<> \
-    class Range<Type>:public NumberRange<Type>{ \
-        public: \
-            Range(Type val_start,Type val_end,Type val_step = 1) \
-                :NumberRange(val_start,val_end,val_step){} \
-            ~Range() = default; \
-    }; \
-    
-template<class Type>
+template <class Type>
 class NumberRange{
-	public:
-		class iterator{
-			public:
-				iterator(Type now,Type step)
-					:m_now(now),m_step(step){}
-				iterator(const iterator&) = default;
-				iterator(iterator&&) = default;
-				~iterator() = default;
-				
-				Type operator*()const noexcept{
-					return m_now;
-				}
-				
-				iterator &operator++()noexcept{
-					m_now += m_step;
-					return *this;
-				}
-				iterator operator++(int)noexcept{
-					iterator itr = *this;
-					m_now += m_step;
-					return itr;
-				}
-				iterator &operator--()noexcept{
-					m_now -= m_step;
-					return *this;
-				}
-				iterator operator--(int)noexcept{
-					iterator itr = *this;
-					m_now -= m_step;
-					return itr;
-				}
-				
-				bool operator!=(const iterator &itr)const noexcept{
-					if(itr.m_step != 0)
-						return m_now != itr.m_now;
-					if(m_step > 0)
-						return m_now <= *itr;
-					else
-						return m_now >= *itr;
-				}
-				bool operator==(const iterator &itr)const noexcept{
-					return m_now == itr.m_now;
-				}
-                bool operator<=(const iterator &itr)const noexcept{
-                    return m_now <= itr.m_now;
-				}
-                bool operator>=(const iterator &itr)const noexcept{
-                    return m_now >= itr.m_now;
-				}
-                bool operator<(const iterator &itr)const noexcept{
-                    return m_now < itr.m_now;
-				}
-                bool operator>(const iterator &itr)const noexcept{
-                    return m_now > itr.m_now;
-				}
-			protected:
-			private:
-				Type m_now,m_step;
-		};
-	
-		NumberRange(Type val_start,Type val_end,Type val_step)
-			:m_val_start(val_start),
-			 m_val_end(val_end),
-			 m_val_step(val_step){
-			if(val_step > 0 && val_start > val_end)
-				throw std::logic_error("Range:Step error");
-			if(val_step < 0 && val_start < val_end)
-				throw std::logic_error("Range:Step error");
-		}
-		NumberRange(const NumberRange &) = default;
-		NumberRange(NumberRange&&) = default;
-		~NumberRange() = default;
-		
-		iterator begin()noexcept{
-			return iterator(m_val_start,m_val_step);
-		}
-		iterator end()noexcept{
-			return iterator(m_val_end,0);
-		}
-	protected:
-	private:
-		Type m_val_start,m_val_end,m_val_step;
-};
-
-
-template<class Iterator>
-class SequenceIteratorRange{
-    public:
-        using difference_type = typename std::iterator_traits<Iterator>::difference_type;
-        using value_type = typename std::iterator_traits<Iterator>::value_type;
+public:
+    using value_type = Type;
+    using difference_type = Type;
     
-        class iterator{
-            public:
-                iterator(Iterator itr,difference_type step)
-                    :m_itr(itr),
-                     m_step(step){}
-                iterator(const iterator &) = default;
-                iterator(iterator &&) = default;
-                ~iterator() = default;
-                
-                value_type &operator*()noexcept{
-                    return *m_itr;
-                }
-                iterator &operator++()noexcept{
-                    m_itr += m_step;
-                    return *this;
-                }
-                iterator operator++(int)noexcept{
-                    iterator itr = *this;
-                    m_itr += m_step;
-                    return itr;
-                }
-                iterator &operator--()noexcept{
-                    m_itr -= m_step;
-                    return *this;
-                }
-                iterator operator--(int)noexcept{
-                    iterator itr = *this;
-                    m_itr -= m_step;
-                    return itr;
-				}
-                
-                bool operator!=(const iterator &itr)const noexcept{
-                    if(itr.m_step != 0)
-                        return m_itr != itr.m_itr;
-                    if(m_step > 0)
-                        return m_itr <= itr.m_itr;
-                    else
-						return m_itr >= itr.m_itr;
-                }
-                bool operator==(const iterator &itr)const noexcept{
-                    return m_itr == itr.m_itr;
-				}
-                bool operator<=(const iterator &itr)const noexcept{
-                    return m_itr <= itr.m_itr;
-                }
-                bool operator>=(const iterator &itr)const noexcept{
-                    return m_itr >= itr.m_itr;
-                }
-                bool operator<(const iterator &itr)const noexcept{
-                    return m_itr < itr.m_itr;
-                }
-                bool operator>(const iterator &itr)const noexcept{
-                    return m_itr > itr.m_itr;
-                }
-            protected:
-            private:
-                Iterator m_itr;
-                difference_type m_step;
-        };
+    class iterator{
+    public:
+        iterator(Type val,Type step)
+            :m_val(val),
+             m_step(step){}
+        iterator(const iterator &) = default;
+        iterator(iterator &&) = default;
+        ~iterator() = default;
         
-        SequenceIteratorRange(Iterator _begin,
-                              Iterator _end,
-                              difference_type _step)
-            :m_begin(_begin),
-             m_end(_step>0 ? _end+1 : _end-1),
-             m_step(_step){}
-        SequenceIteratorRange(const SequenceIteratorRange &) = default;
-        SequenceIteratorRange(SequenceIteratorRange &&) = default;
-        ~SequenceIteratorRange() = default;
-        
-        iterator begin()noexcept{
-            return iterator(m_begin,m_step);
+        Type operator*()const noexcept{
+            return m_val;
         }
-        iterator end()noexcept{
-            return iterator(m_end,0);
+        iterator &operator++()noexcept{
+            m_val += m_step;
+            return *this;
         }
-        
+        iterator operator++(int)noexcept{
+            iterator itr = *this;
+            m_val += m_step;
+            return itr;
+        }
+        iterator &operator--()noexcept{
+            m_val -= m_step;
+            return *this;
+        }
+        iterator operator--(int)noexcept{
+            iterator itr = *this;
+            m_val -= m_step;
+            return itr;
+        }
+        bool operator!=(const iterator &itr)const noexcept{
+            return m_val != itr.m_val;
+        }
+        bool operator==(const iterator &itr)const noexcept{
+            return m_val == itr.m_val;
+        }
+        bool operator<=(const iterator &itr)const noexcept{
+            return m_val <= itr.m_val;
+        }
+        bool operator>=(const iterator &itr)const noexcept{
+            return m_val >= itr.m_val;
+        }
+        bool operator<(const iterator &itr)const noexcept{
+            return m_val < itr.m_val;
+        }
+        bool operator>(const iterator &itr)const noexcept{
+            return m_val > itr.m_val;
+        }
     protected:
     private:
-        Iterator m_begin;
-        Iterator m_end;
-        difference_type m_step;
-};
+        Type m_val,m_step;
+    };
 
-
-template<class Type>
-class Range:public SequenceIteratorRange<Type>{
-    public:
-        using difference_type = typename std::iterator_traits<Type>::difference_type;
+    NumberRange(Type begin,Type end,Type step = 0)
+        :m_begin(begin),
+         m_end(end),
+         m_step(step){
+        if(m_step == 0){
+            if(end >= begin){
+                m_step = 1;
+            }else{
+                m_step = -1;
+            }
+        }
+    }
+    NumberRange(const NumberRange &) = default;
+    NumberRange(NumberRange &&) = default;
+    ~NumberRange() = default;
     
-        Range(Type _begin,Type _end,difference_type _step = 1)
-            :SequenceIteratorRange<Type>(_begin,_end,_step){}
-        ~Range() = default;
+    NumberRange &operator=(const NumberRange &) = default;
+    NumberRange &operator=(NumberRange &&) = default;
+    
+    iterator begin()noexcept{
+        return iterator(m_begin,m_step);
+    }
+    iterator end()noexcept{
+        return iterator(m_end,m_step);
+    }
+    
+protected:
+private:
+    Type m_begin,m_end,m_step;
 };
 
-XRANGE_NUM_EXPAND(char)
-XRANGE_NUM_EXPAND(signed char)
-XRANGE_NUM_EXPAND(unsigned char)
+template <class Iterator>
+class ContainerRange{
+public:
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using difference_type = typename std::iterator_traits<Iterator>::difference_type;
+    using iterator = Iterator;
 
-XRANGE_NUM_EXPAND(signed short int)
-XRANGE_NUM_EXPAND(unsigned short int)
+    ContainerRange(iterator begin,iterator end)
+        :m_begin(begin),
+         m_end(end){}
+    ContainerRange(const ContainerRange &) = default;
+    ContainerRange(ContainerRange &&) = default;
+    ~ContainerRange() = default;
+    
+    ContainerRange &operator=(const ContainerRange &) = default;
+    ContainerRange &operator=(ContainerRange &&) = default;
+    
+    difference_type size()const noexcept{
+        return m_end - m_begin;
+    }
+    
+    value_type &operator[](difference_type index)noexcept{
+        return *(m_begin + index);
+    }
+    const value_type &operator[](difference_type index)const noexcept{
+        return *(m_begin + index);
+    }
+    
+    iterator begin()noexcept{
+        return m_begin;
+    }
+    iterator end()noexcept{
+        return m_end;
+    }
+protected:
+private:
+    iterator m_begin;
+    iterator m_end;
+};
 
-XRANGE_NUM_EXPAND(signed int)
-XRANGE_NUM_EXPAND(unsigned int)
+template<class Iterator>
+class Range : public ContainerRange<Iterator>{
+public:
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using difference_type = typename std::iterator_traits<Iterator>::difference_type;
+    using iterator = Iterator;
+    
+    Range(iterator begin,iterator end)
+        :ContainerRange<Iterator>(begin,end){}
+    ~Range() = default;
+    
+};
 
-XRANGE_NUM_EXPAND(signed long int)
-XRANGE_NUM_EXPAND(unsigned long int)
+#define EXPAND(type) \
+template <> \
+class Range<type> : public NumberRange<type>{ \
+public: \
+    Range(type begin,type end,type step = 0) \
+        :NumberRange(begin,end,step){} \
+    ~Range() = default; \
+}; \
 
-XRANGE_NUM_EXPAND(signed long long int)
-XRANGE_NUM_EXPAND(unsigned long long int)
+EXPAND(char)
+EXPAND(signed char)
+EXPAND(unsigned char)
 
-XRANGE_NUM_EXPAND(float)
-XRANGE_NUM_EXPAND(double)
-XRANGE_NUM_EXPAND(long double)
+EXPAND(signed short int)
+EXPAND(unsigned short int)
 
+EXPAND(signed int)
+EXPAND(unsigned int)
+
+EXPAND(signed long int)
+EXPAND(unsigned long int)
+
+EXPAND(signed long long int)
+EXPAND(unsigned long long int)
+
+#undef EXPAND
 
 #endif
