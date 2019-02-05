@@ -15,7 +15,7 @@ public:
             :m_val(val),
              m_step(step){}
         iterator(const iterator &) = default;
-        iterator(iterator &&) = default;
+        iterator(iterator &&)noexcept = default;
         ~iterator() = default;
         
         Type operator*()const noexcept{
@@ -98,13 +98,15 @@ class ContainerRange{
 public:
     using value_type = typename std::iterator_traits<Iterator>::value_type;
     using difference_type = typename std::iterator_traits<Iterator>::difference_type;
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    using pointer = typename std::iterator_traits<Iterator>::pointer;
     using iterator = Iterator;
 
     ContainerRange(iterator begin,iterator end)
         :m_begin(begin),
          m_end(end){}
     ContainerRange(const ContainerRange &) = default;
-    ContainerRange(ContainerRange &&) = default;
+    ContainerRange(ContainerRange &&)noexcept = default;
     ~ContainerRange() = default;
     
     ContainerRange &operator=(const ContainerRange &) = default;
@@ -113,12 +115,37 @@ public:
     difference_type size()const noexcept{
         return m_end - m_begin;
     }
-    
-    value_type &operator[](difference_type index)noexcept{
-        return *(m_begin + index);
+
+    bool empty()const noexcept{
+        return size() == 0;
     }
-    const value_type &operator[](difference_type index)const noexcept{
-        return *(m_begin + index);
+
+    reference front()noexcept{
+        return *m_begin;
+    }
+    reference back()noexcept{
+        return *std::prev(m_end);
+    }
+
+    pointer data()noexcept{
+        return &(*m_begin);
+    }
+
+    void expand_left(difference_type size = 1){
+        m_begin = std::prev(m_begin,size);
+    }
+    void remove_left(difference_type size = 1){
+        m_begin = std::next(m_begin,size);
+    }
+    void expand_right(difference_type size = 1){
+        m_end = std::next(m_end,size);
+    }
+    void remove_right(difference_type size = 1){
+        m_end = std::prev(m_end,size);
+    }
+    
+    reference operator[](difference_type index)noexcept{
+        return m_begin[index];
     }
     
     iterator begin()noexcept{
