@@ -10,21 +10,23 @@
 using namespace std;
 int main(){
     //3 5 7
-    for(auto i:Range<int>(3,9,2))
+    for(auto i:xrange::Range<int>(3,9,2))
         std::cout<<i<<' ';
     std::cout<<std::endl;
     //c b a
-    for(auto i:Range<signed char>('c','a' - 1))
+    for(auto i:xrange::Range<signed char>('c','a' - 1))
         std::cout<<i<<' ';
     std::cout<<std::endl;
     //f e d c a
     std::vector<char> vc = {'a','b','c','d','e','f','g'};
-    for(auto i:Range<decltype(vc.rbegin())>(vc.rbegin() + 1,vc.rend() - 1))
+    for(auto i:xrange::Range<decltype(vc.rbegin())>(vc.rbegin() + 1,vc.rend() - 1))
         std::cout<<i<<' ';
     std::cout<<std::endl;
     //e d
-    auto range = Range<decltype(vc.rbegin())>(vc.rbegin() + 1,vc.rend() - 1);
-    for(auto i:Range<int>(1,3))//1 2
+    auto range = xrange::make_crrange(vc);
+    range.remove_left();
+    range.remove_right();
+    for(auto i:xrange::Range<int>(1,3))//1 2
         std::cout<<range[i]<<' ';//operator[]
     std::cout<<std::endl;
 }
