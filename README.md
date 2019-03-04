@@ -30,4 +30,9 @@ int main(){
         std::cout<<range[i]<<' ';//operator[]
     std::cout<<std::endl;
 }
+
+
+
+
+
 ```
