@@ -5,28 +5,26 @@
 #include "Range.h"
 
 namespace xrange{
-    template <class Iterator>
-    class TakeIterator{
+    template <class Size = size_t>
+    class TakeRange{
     public:
-        using reference = typename std::iterator_traits<Iterator>::reference;
-        
-        TakeIterator(Iterator itr,size_type rem)
-        ~TakeIterator() = default;
-        
-        TakeIterator &operator++()noexcept{
-            ++m_itr;
-            return *this;
-        }
-        
-        reference operator*()noexcept{
-            return *m_itr;
+        TakeRange(Size count)
+            :m_count(count){}
+        ~TakeRange() = default;
+
+        template <class RangeType>
+        friend RangeType operator>>(RangeType range,TakeRange takeRange){
+            return RangeType(range.begin(),range.begin() + takeRange.m_count);
         }
     protected:
     private:
-        Iterator m_itr;
+        Size m_count;
     };
-    
-    
+
+    template <class Size = size_t>
+    TakeRange<Size> take(Size count){
+        return TakeRange<Size>(count);
+    }
 }
 
 #endif //_XRANGE_TAKE_H_

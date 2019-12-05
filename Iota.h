@@ -8,23 +8,66 @@ namespace xrange{
     template <class Integeral>
     class IotaIterator{
     public:
-        using _self = IotaIterator<Integeral>;
-    
-        IotaIterator(Integeral val)
+        explicit IotaIterator(Integeral val)
             :m_val(val){}
         ~IotaIterator() = default;
         
-        _self &operator++()noexcept{
+        IotaIterator &operator++()noexcept{
             ++m_val;
             return *this;
         }
-        
+        const IotaIterator operator++(int)noexcept{
+            auto tmp = *this;
+            ++m_val;
+            return tmp;
+        }
+
+        IotaIterator &operator--()noexcept{
+            --m_val;
+            return *this;
+        }
+        const IotaIterator operator--(int)noexcept{
+            auto tmp = *this;
+            --m_val;
+            return tmp;
+        }
+
+        IotaIterator operator+(Integeral value)const noexcept{
+            return IotaIterator(m_val + value);
+        }
+        IotaIterator &operator+=(Integeral value)noexcept{
+            m_val += value;
+            return *this;
+        }
+        IotaIterator operator-(Integeral value)const noexcept{
+            return IotaIterator(m_val - value);
+        }
+        IotaIterator &operator-=(Integeral value)noexcept{
+            m_val -= value;
+            return *this;
+        }
+
         Integeral operator*()const noexcept{
             return m_val;
         }
-        
-        bool operator!=(const _self &rhs)const noexcept{
+
+        bool operator==(const IotaIterator &rhs)const noexcept{
+            return m_val == rhs.m_val;
+        }
+        bool operator!=(const IotaIterator &rhs)const noexcept{
             return m_val != rhs.m_val;
+        }
+        bool operator<(const IotaIterator &rhs)const noexcept{
+            return m_val < rhs.m_val;
+        }
+        bool operator>(const IotaIterator &rhs)const noexcept{
+            return m_val > rhs.m_val;
+        }
+        bool operator<=(const IotaIterator &rhs)const noexcept{
+            return m_val <= rhs.m_val;
+        }
+        bool operator>=(const IotaIterator &rhs)const noexcept{
+            return m_val >= rhs.m_val;
         }
     protected:
     private:
