@@ -6,28 +6,33 @@
 ```
 #include <iostream>
 #include <vector>
-#include "Range.hpp"
+#include "XRange.h"
 using namespace std;
+
+bool isPrime(int x){
+    if(1 <= x && x <= 3)return true;
+    for(int i : xrange::iota(2,x-1)){
+        if(x % i == 0)
+            return false;
+    }
+    return true;
+}
+
 int main(){
-    //3 5 7
-    for(auto i:xrange::Range<int>(3,9,2))
-        std::cout<<i<<' ';
-    std::cout<<std::endl;
-    //c b a
-    for(auto i:xrange::Range<signed char>('c','a' - 1))
-        std::cout<<i<<' ';
-    std::cout<<std::endl;
-    //f e d c a
-    std::vector<char> vc = {'a','b','c','d','e','f','g'};
-    for(auto i:xrange::Range<decltype(vc.rbegin())>(vc.rbegin() + 1,vc.rend() - 1))
-        std::cout<<i<<' ';
-    std::cout<<std::endl;
-    //e d
-    auto range = xrange::make_crrange(vc);
-    range.remove_left();
-    range.remove_right();
-    for(auto i:xrange::Range<int>(1,3))//1 2
-        std::cout<<range[i]<<' ';//operator[]
-    std::cout<<std::endl;
+    for(auto i : xrange::iota(3) >> xrange::map([](int x)->int{return x + 1;}) >> xrange::take(3) >> xrange::head()){
+        cout << i << ' ';
+    }
+    cout << endl;
+    for(auto i : xrange::iota(1)
+              >> xrange::filter([](int x) -> bool{ return x % 3 == 0;})
+              >> xrange::take(10)){
+        cout << i << ' ';
+    }
+    cout << endl;
+    auto primes = xrange::iota(1) >> xrange::filter(isPrime);
+    for(auto i : primes >> xrange::take(100)){
+        cout << i << ' ';
+    }
+    return 0;
 }
 ```
