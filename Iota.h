@@ -1,18 +1,18 @@
-#ifndef _XRANGE_ITOA_H_
-#define _XRANGE_ITOA_H_
+#ifndef _XRANGE_IOTA_H_
+#define _XRANGE_IOTA_H_
 
 #include <limits>
 #include "Range.h"
 
 namespace xrange{
     template <class Integeral>
-    class ItoaIterator{
+    class IotaIterator{
     public:
-        using _self = ItoaIterator<Integeral>;
+        using _self = IotaIterator<Integeral>;
     
-        ItoaIterator(Integeral val)
+        IotaIterator(Integeral val)
             :m_val(val){}
-        ~ItoaIterator() = default;
+        ~IotaIterator() = default;
         
         _self &operator++()noexcept{
             ++m_val;
@@ -33,20 +33,20 @@ namespace xrange{
     
     template <class Integeral>
     auto iota(Integeral beg,Integeral end)
-        -> Range<ItoaIterator<Integeral>>{
-        return Range<ItoaIterator<Integeral>>(
-            ItoaIterator<Integeral>(beg),
-            ItoaIterator<Integeral>(end)
-        );    
+        -> Range<IotaIterator<Integeral>>{
+        return Range<IotaIterator<Integeral>>(
+            IotaIterator<Integeral>(beg),
+            IotaIterator<Integeral>(end)
+        );
     }
     template <class Integeral>
     auto iota(Integeral beg)
-        -> Range<ItoaIterator<Integeral>>{
-        return Range<ItoaIterator<Integeral>>(
-            ItoaIterator<Integeral>(beg),
-            ItoaIterator<Integeral>(std::numeric_limits<Integeral>::max())
+        -> Range<IotaIterator<Integeral>>{
+        return Range<IotaIterator<Integeral>>(
+            IotaIterator<Integeral>(beg),
+            IotaIterator<Integeral>(std::numeric_limits<Integeral>::max())
         );    
     }
 }
 
-#endif //_XRANGE_ITOA_H_
+#endif //_XRANGE_IOTA_H_

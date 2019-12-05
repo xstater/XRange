@@ -19,6 +19,8 @@ namespace xrange{
         Iterator end()const noexcept{
             return m_end;
         }
+        
+        
     protected:
     private:
         Iterator m_beg,m_end;
