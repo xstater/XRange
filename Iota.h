@@ -8,6 +8,14 @@ namespace xrange{
     template <class Integeral>
     class IotaIterator{
     public:
+        using value_type = Integeral;
+        using reference = Integeral &;
+        using const_reference = const Integeral &;
+        using pointer = Integeral *;
+        using const_pointer = const Integeral *;
+        using difference_type = Integeral;
+    
+    
         explicit IotaIterator(Integeral val)
             :m_val(val){}
         ~IotaIterator() = default;

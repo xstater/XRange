@@ -5,10 +5,9 @@
 #include "Range.h"
 
 namespace xrange{
-    template <class Size = size_t>
     class TakeRange{
     public:
-        TakeRange(Size count)
+        TakeRange(size_t count)
             :m_count(count){}
         ~TakeRange() = default;
 
@@ -18,12 +17,11 @@ namespace xrange{
         }
     protected:
     private:
-        Size m_count;
+        size_t m_count;
     };
 
-    template <class Size = size_t>
-    TakeRange<Size> take(Size count){
-        return TakeRange<Size>(count);
+    TakeRange take(size_t count){
+        return TakeRange(count);
     }
 }
 

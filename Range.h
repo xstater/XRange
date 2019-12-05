@@ -5,6 +5,8 @@ namespace xrange{
     template <class Iterator>
     class Range{
     public:
+        using iterator = Iterator;
+    
         Range(Iterator beg,Iterator end)
             :m_beg(beg),m_end(end){}
         ~Range() = default;
