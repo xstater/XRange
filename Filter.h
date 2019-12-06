@@ -8,11 +8,11 @@ namespace xrange{
     class FilterIterator{
     public:
         using value_type = typename Iterator::value_type;
-        using reference = typename Iterator::reference;
-        using const_reference = typename Iterator::const_reference;
-        using pointer = typename Iterator::pointer;
-        using const_pointer = typename Iterator::const_pointer;
-        using ArgType = typename Iterator::value_type;
+        using reference = value_type &;
+        using const_reference = const value_type &;
+        using pointer = value_type *;
+        using const_pointer = const value_type *;
+        using ArgType = value_type;
         using difference_type = typename Iterator::difference_type;
 
         FilterIterator(std::function<bool(ArgType)> f,Iterator itr,Iterator end)
@@ -43,21 +43,6 @@ namespace xrange{
                 ++m_itr;
             }
             return tmp;
-        }
-
-
-        FilterIterator operator+(difference_type value)const noexcept{
-            auto itr = *this;
-            while(value-- != 0){
-                ++itr;
-            }
-            return itr;
-        }
-        FilterIterator &operator+=(difference_type value)noexcept{
-            while(value-- != 0){
-                ++(*this);
-            }
-            return *this;
         }
 
         bool operator==(const FilterIterator &rhs)const noexcept{
