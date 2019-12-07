@@ -44,6 +44,19 @@ namespace xrange{
             }
             return tmp;
         }
+        FilterIterator operator+(difference_type count)const noexcept{
+            auto itr = *this;
+            for(;count != 0;--count){
+                ++itr;
+            }
+            return itr;
+        }
+        FilterIterator &operator+=(difference_type count)const noexcept{
+            for(;count != 0;--count){
+                ++(*this);
+            }
+            return *this;
+        }
 
         bool operator==(const FilterIterator &rhs)const noexcept{
             return m_itr == rhs.m_itr;

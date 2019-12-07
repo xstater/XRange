@@ -28,8 +28,8 @@ namespace xrange{
                 m_itr = m_end;
                 return *this;
             }
-            m_itr = m_next + 1;
-            m_next = m_itr;
+            ++m_next;
+            m_itr = m_next;
             while(m_next != m_end && *m_next != m_spliter){
                 ++m_next;
             }
