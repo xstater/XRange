@@ -9,6 +9,7 @@ namespace xrange{
     public:
         using value_type = Range<Iterator>;
         using Spliter = typename Iterator::value_type;
+        using difference_type = typename Iterator::difference_type;
     
         SplitByIterator(Spliter spliter,Iterator itr,Iterator end)
             :m_spliter(spliter),m_itr(itr),m_next(itr),m_end(end){
@@ -39,6 +40,19 @@ namespace xrange{
             auto itr = *this;
             ++(*this);
             return itr;
+        }
+        SplitByIterator operator+(difference_type count)const noexcept{
+            auto itr = *this;
+            for(;count != 0;--count){
+                ++itr;
+            }
+            return itr;
+        }
+        SplitByIterator &operator+=(difference_type count)const noexcept{
+            for(;count != 0;--count){
+                ++(*this);
+            }
+            return *this;
         }
         
         bool operator==(const SplitByIterator &rhs)const noexcept{

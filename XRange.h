@@ -4,6 +4,7 @@
 #include "Range.h"
 #include "Iota.h"
 #include "Repeat.h"
+#include "Iterate.h"
 #include "Take.h"
 #include "Drop.h"
 #include "Tail.h"
@@ -13,6 +14,6 @@
 #include "Map.h"
 #include "Filter.h"
 #include "SplitBy.h"
-
+#include "Copy.h"
 
 #endif //_XRANGE_H_

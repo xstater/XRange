@@ -88,15 +88,17 @@ namespace xrange{
     template <class Func>
     class MapRange{
     public:
+        using raw_func = std::decay_t<Func>;
+
         MapRange(Func &&f)
             :m_func(std::forward<Func>(f)){}
         
         template <class RangeType>
         friend auto operator>>(RangeType range,MapRange mapRange)
-            -> Range<MapIterator<return_type_t<Func>,typename RangeType::iterator>>{
-            return Range<MapIterator<return_type_t<Func>,typename RangeType::iterator>>(
-                MapIterator<return_type_t<Func>,typename RangeType::iterator>(mapRange.m_func,range.begin()),
-                MapIterator<return_type_t<Func>,typename RangeType::iterator>(mapRange.m_func,range.end())
+            -> Range<MapIterator<return_type_t<raw_func>,typename RangeType::iterator>>{
+            return Range<MapIterator<return_type_t<raw_func>,typename RangeType::iterator>>(
+                MapIterator<return_type_t<raw_func>,typename RangeType::iterator>(mapRange.m_func,range.begin()),
+                MapIterator<return_type_t<raw_func>,typename RangeType::iterator>(mapRange.m_func,range.end())
             );
         }
         
